@@ -1,6 +1,5 @@
 package com.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +40,6 @@ public class SongBankController {
 		return songBankDao.filterByArtist(artist);
 	}
 	
-//
-//	@GetMapping("/add/{title}/{artists}/{genre}")
-//	public List<Song> addSong(@PathVariable String title, @PathVariable String artists, @PathVariable String genre){
-//		
-//		List<String> artistList = Arrays.asList(artists.split("-"));
-//
-//		songBankDao.addSong(new Song(title, artistList, genre));
-//		return songBankDao.getPlaylist();
-//	}
+
 	
 }

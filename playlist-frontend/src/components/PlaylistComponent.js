@@ -8,28 +8,27 @@ class PlaylistComponent extends React.Component{
 
     constructor(props){
         super(props);
+        this.genreList = []
+
         this.state = {
             songs: [],
             songList: [], 
             suggestions: [],
             text: '', // text to be rendered in search bar 
             criteria: 'title', // criteria to filter on search
-            artists:[], 
-            genres:[],
             message: "" // error message
         }
     }
 
     componentDidMount = () => {
 
-        // Getting songs in playlist from backend
-        PlaylistService.getPlaylist().then((response) => {
-            this.setState({songs: response.data})
-        });
-
         // Getting total list of songs from backend
         SongBankService.getAllSongs().then((response) => {
             this.setState({songList: response.data})
+        });
+        // Getting songs in playlist from backend
+        PlaylistService.getPlaylist().then((response) => {
+            this.setState({songs: response.data})
         });
 
     }
@@ -56,8 +55,36 @@ class PlaylistComponent extends React.Component{
 
     }
 
+    getGenres = () => {
+        const songList = this.state.songList;
+        let genreList = [];
+        for (let i = 0; i < songList.length; i++){
 
+            if (!genreList.includes(songList[i].genre)) {
 
+                genreList.push(songList[i].genre);
+            }
+        }
+        return genreList;
+    }
+
+    getArtists = () => {
+        const songList = this.state.songList;
+        let artistList = [];
+        for (let i = 0; i < songList.length; i++){
+
+            let artists = songList[i].artists; // list of artists for each record
+
+            for (let j = 0; j < artists.length; j++){
+
+                if (!artistList.includes(artists[j])) {
+
+                    artistList.push(artists[j]);
+                }
+            }
+        }
+        return artistList;
+    }
     // ------------------------------- Search Bar -----------------------------------------------//
 
     onTextChange = (e) => {
@@ -110,18 +137,47 @@ class PlaylistComponent extends React.Component{
             </ul>
         );
     }
-       
+
+    filterByGenre = (genre) => {
+        SongBankService.handleGenre(genre).then((response) => {
+            this.setState({suggestions: response.data})
+        });
+        this.renderSuggestions();
+    }
+    
+    filterByArtist = (artist) => {
+        SongBankService.handleArtist(artist).then((response) => {
+            this.setState({suggestions: response.data})
+        });
+        this.renderSuggestions();
+        console.log("Suggestions:".concat(this.state.suggestions));
+    }
 
     render() {
 
         const errorStyle = {
             color: 'red'
         }
+        
+        const genreList = this.getGenres();
+        const artistList = this.getArtists();
 
         return(
             <div>
-            <h1 className="text-center">Playlist</h1>
+            {/* <h1 id="notebooks" className="text-center">Playlist</h1> */}
 
+            <SearchBar
+                    suggestions={this.state.suggestions}
+                    text={this.state.text}
+                    genres = {genreList}
+                    artists = {artistList}
+                    onTextChange={this.onTextChange}
+                    renderSuggestions={this.renderSuggestions}
+                    filterByGenre={this.filterByGenre}
+                    filterByArtist={this.filterByArtist}
+            />
+
+            <h1 id="notebooks-alt" className="text-center">Playlist</h1>
             <p style={errorStyle}>{this.state.message}</p>
             <table className = "table table-striped table-dark"> 
                 <thead>
@@ -145,7 +201,7 @@ class PlaylistComponent extends React.Component{
                             <td>
                                 <button className="btn btn-success"
                                 onClick={() => this.handleClickPlay(song.title)} >
-                                    <i class="fa fa-play-circle"/></button>
+                                    <i className="fa fa-play-circle"/></button>
 
                             </td>
                             
@@ -161,12 +217,7 @@ class PlaylistComponent extends React.Component{
                     )}
                 </tbody>
             </table>
-            <SearchBar
-                    suggestions={this.state.suggestions}
-                    text={this.state.text}
-                    onTextChange={this.onTextChange}
-                    renderSuggestions={this.renderSuggestions}
-            />
+
             </div>
         )
     }

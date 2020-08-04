@@ -24,7 +24,7 @@ class SongBankService {
     }
 
     handleArtist = (artist) => {
-        return axios.get(FILTER_GENRE_URL.concat(artist));
+        return axios.get(FILTER_ARTIST_URL.concat(artist));
     }
 }
 
