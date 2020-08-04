@@ -2,7 +2,7 @@
 
 A Spring Boot/React application for accessing and manipulating song data in a personal playlist from your local MongoDB instance with a React.js user interface.  
   
-**Back-end: *
+**Back-end:**
 * **spring-mongo-connector:** Spring Boot REST application containing methods for managing a personal playlist by adding songs from the song bank or removing them
 * **spring-mongo-connector-songbank:** Spring Boot REST application containing methods for retrieving and manipulating songs in the song bank, with options to filter songs based on the genre or artist
 
