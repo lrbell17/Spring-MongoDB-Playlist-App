@@ -1,5 +1,7 @@
 import React from 'react';
 import PlaylistService from '../services/PlaylistService';
+import SongBankService from '../services/SongBankService';
+import SearchBar from './SearchBar';
 
 
 class PlaylistComponent extends React.Component{
@@ -8,7 +10,13 @@ class PlaylistComponent extends React.Component{
         super(props);
         this.state = {
             songs: [],
-            message: ""
+            songList: [], 
+            suggestions: [],
+            text: '', // text to be rendered in search bar 
+            criteria: 'title', // criteria to filter on search
+            artists:[], 
+            genres:[],
+            message: "" // error message
         }
     }
 
@@ -18,18 +26,91 @@ class PlaylistComponent extends React.Component{
         PlaylistService.getPlaylist().then((response) => {
             this.setState({songs: response.data})
         });
-    }
 
-    handleClickDelete(title){
+        // Getting total list of songs from backend
+        SongBankService.getAllSongs().then((response) => {
+            this.setState({songList: response.data})
+        });
+
+    }
+    
+    // ------------------------ Playlist ------------------------------------------------//
+
+    // Deleting a song from the playlist
+    handleClickDelete = (id) => {
         // delete item & update list
-        PlaylistService.handleDelete(title).then((response)=> {
+        PlaylistService.handleDelete(id).then((response)=> {
             this.setState({songs: response.data})
         });
     }
 
-    handleClickPlay(title){
+    handleClickPlay = (title) => {
         this.setState({message: "Play feauture is coming soon, sorry for the inconvenience!"});
     }
+
+    handleSave = (title, artists, genre) => {
+
+        PlaylistService.handleSave(title, artists, genre).then((response) => {
+            this.setState({songs: response.data})
+        });
+
+    }
+
+
+
+    // ------------------------------- Search Bar -----------------------------------------------//
+
+    onTextChange = (e) => {
+        const value = e.target.value;
+        let suggestions = [];
+
+        if(value.length > 0){
+            let songList = this.state.songList;
+
+            /*checking for matching substring in songList (by title) */
+            for (let i=0; i< songList.length; i++ ){
+
+                if (songList[i].title.substr(0, value.length).toLowerCase() === value.toLowerCase()){
+                    suggestions.push(songList[i]);
+                }
+
+            }
+
+        }
+
+        this.setState(() => ({
+            suggestions,
+            text: value
+        }))
+    }
+
+    selectedText = (value) => {
+
+        this.handleSave(value.title, value.artists, value.genre);
+        this.setState(() => ({
+            text: value.title, //.concat(" - ").concat(value.artists),
+            suggestions: []
+        }));
+
+    }
+
+    renderSuggestions = () => {
+        let { suggestions } = this.state;
+        if(suggestions.length === 0){
+            return null;
+        }
+        return (
+            <ul >
+                {
+                    suggestions.map((song, index) => (
+                        <li key={index} onClick={() => this.selectedText(song)}>
+                             {song.title} - {song.artists} ({song.genre})
+                        </li>))
+                }
+            </ul>
+        );
+    }
+       
 
     render() {
 
@@ -72,18 +153,20 @@ class PlaylistComponent extends React.Component{
                             <td>
                                 <button
                                     className="btn btn-danger"
-                                    onClick={() => this.handleClickDelete(song.title)}> 
+                                    onClick={() => this.handleClickDelete(song.songId)}> 
                                         <i className="fa fa-trash-o" aria-hidden="true" />
                                 </button>
                             </td>
-
-
                         </tr>
-
                     )}
                 </tbody>
             </table>
-
+            <SearchBar
+                    suggestions={this.state.suggestions}
+                    text={this.state.text}
+                    onTextChange={this.onTextChange}
+                    renderSuggestions={this.renderSuggestions}
+            />
             </div>
         )
     }

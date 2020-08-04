@@ -26,24 +26,10 @@ public class PlaylistController {
 		return playlistDao.getPlaylist();
 	}
 	
-	@GetMapping("/title/{title}")
-	public List<Song> findBytitle(@PathVariable String title) {
-		return playlistDao.findByTitle(title);
-	}
 	
-	@GetMapping("/genre/{genre}")
-	public List<Song> filterByGenre(@PathVariable String genre){
-		return playlistDao.filterByGenre(genre);
-	}
-	
-	@GetMapping("/artist/{artist}")
-	public List<Song> filterByArtist(@PathVariable String artist){
-		return playlistDao.filterByArtist(artist);
-	}
-	
-	@GetMapping("/delete/{title}")
-	public List<Song> delete(@PathVariable String title){
-		playlistDao.deleteByTitle(title);
+	@GetMapping("/delete/{id}")
+	public List<Song> delete(@PathVariable String id){
+		playlistDao.deleteById(id);
 		return playlistDao.getPlaylist();
 	}
 	

@@ -10,15 +10,7 @@ public interface PlaylistDao {
 
 	void addSong(Song song);
 
-	void removeSong(String id);
-
-	List<Song> findByTitle(String title);
-
-	List<Song> filterByGenre(String genre);
-	
-	List<Song> filterByArtist(String artist);
-	
-	void deleteByTitle(String title);
+	void deleteById(String id);
 
 	void truncate();
 

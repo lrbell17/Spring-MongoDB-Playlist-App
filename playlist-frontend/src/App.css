@@ -37,7 +37,7 @@ li {
     background-color: rgba(0, 0, 0, 0.05);
     background-image:
         linear-gradient(90deg,
-        #FFD32E 10px,
+        #c21717 10px,
         #EEE 10px,
         #EEE 11px,
         transparent 11px);
@@ -64,14 +64,17 @@ li {
 }
 
 #notebooks {
-    background: whitesmoke;
-    position: absolute;
-    left: 50%;
-    margin-left: -175px;
+    background: rgb(76, 76, 77);
+    color: white;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    /* margin-left: -175px; */
+    margin-left: 25%;
     margin-top: 35px;
-    width: 350px;
+    width: 50%;
     padding: 15px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    /* border: 1px solid rgba(0, 0, 0, 0.2); */
     border-radius: 5px;
     box-shadow: inset 1px 1px 0 white;
     max-height: 1000px;
@@ -97,10 +100,10 @@ p {
 #notebooks span {
     display: block;
     position: absolute;
-    background: #FFD32E;
+    background: #c21717;
     bottom: -35px;
-    left: -1px;
-    width: 360px;
+    left: -0.1px;
+    width: 100%;
     border-radius: 0 0 5px 5px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 10px;
