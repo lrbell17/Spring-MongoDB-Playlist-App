@@ -4,12 +4,12 @@ import '../App.css';
 const NavBar = props => {
 
     return (
-        <div class="navbar">
-            <div class="dropdown">
-                <button class="dropbtn">Filter by Genre  
-                <i class="fa fa-caret-down"></i>
+        <div className="navbar">
+            <div className="dropdown">
+                <button className="dropbtn">Filter by Genre  
+                <i className="fa fa-caret-down"></i>
                 </button>
-                <div class="dropdown-content">
+                <div className="dropdown-content">
                     {
 
                             props.genres.sort().map((genre, index) => (
@@ -22,13 +22,13 @@ const NavBar = props => {
                 </div>
             </div>
 
-            <div class="navDesc"> Search by Title </div>
-            <div class="dropdown">
-                    <button class="dropbtn">Filter by Artist
-                    <i class="fa fa-caret-down"></i>
+            <div className="navDesc"> Search by Artist/Title </div>
+            <div className="dropdown">
+                    <button className="dropbtn">Filter by Artist
+                    <i className="fa fa-caret-down"></i>
                     </button>
 
-                    <div class="dropdown-content">
+                    <div className="dropdown-content">
                         {
 
                                 props.artists.sort().map((artist, index) => (

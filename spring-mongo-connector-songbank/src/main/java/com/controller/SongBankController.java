@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dao.SongBankDao;
 import com.model.Song;
 
-@CrossOrigin(origins = "http://localhost:3000") // allow access from port 3000
+@CrossOrigin(origins = "http://localhost:3000") // allow access from port 3000 (React App)
 @RestController
 @RequestMapping("/songs")
 public class SongBankController {

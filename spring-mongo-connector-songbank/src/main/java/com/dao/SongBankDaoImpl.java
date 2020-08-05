@@ -48,8 +48,7 @@ public class SongBankDaoImpl implements SongBankDao{
 				filtered.add(song);
 			}
 		}
-		
-		System.out.println(filtered);
+
 		return filtered;
 	}
 	

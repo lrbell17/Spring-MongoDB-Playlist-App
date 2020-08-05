@@ -30,21 +30,19 @@ public class SpringMongoConnectorSongbankApplication implements CommandLineRunne
 		songBankDao.truncate();
 
 		
-		// initializing some values
+		// initializing some values & adding to DB
 		Song s1 = new Song("Sunshine", Arrays.asList("Atmosphere"), "Rap");
 		Song s2 = new Song("Jungle Boogie", Arrays.asList("Kool & The Gang"), "Funk");
 		Song s3 = new Song("Baby Blue", Arrays.asList("Action Bronson", "Chance the Rapper"), "Rap");
 		Song s4 = new Song("Sweet Emotion", Arrays.asList("Aerosmith"), "Rock");
 		Song s5 = new Song("Big Iron", Arrays.asList("Marty Robbins"), "Country");
 		Song s6 = new Song("Wanted Dead or Alive", Arrays.asList("Peter Tosh"), "Reggae");
-		
 		Song s7 = new Song("Little Wing", Arrays.asList("Jimi Hendrix"), "Rock");
 		Song s8 = new Song("Express Yourself", Arrays.asList("N.W.A."), "Rap");
 		Song s9 = new Song("Saw Red", Arrays.asList("Sublime", "Gwen Stefani"), "Reggae");
 		Song s10 = new Song("Black Irish", Arrays.asList("The Devil Makes Three"), "Bluegrass");
 		Song s11 = new Song("Nothing From Nothing", Arrays.asList("Billy Preston"), "Funk");
-		Song s12 = new Song("Everyhing I Am", Arrays.asList("Kanye West, DJ Premier"), "Rap");
-		
+		Song s12 = new Song("Everything I Am", Arrays.asList("Kanye West", "DJ Premier"), "Rap");
 		Song s13 = new Song("Santeria", Arrays.asList("Sublime"), "Reggae");
 		Song s14 = new Song("Jars at Home", Arrays.asList("Trampled by Turtles"), "Bluegrass");
 		Song s15 = new Song("Space Oddity", Arrays.asList("David Bowie"), "Rock");

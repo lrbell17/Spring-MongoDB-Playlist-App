@@ -15,7 +15,6 @@ class PlaylistComponent extends React.Component{
             songList: [], 
             suggestions: [],
             text: '', // text to be rendered in search bar 
-            criteria: 'title', // criteria to filter on search
             message: "" // error message
         }
     }
@@ -33,6 +32,7 @@ class PlaylistComponent extends React.Component{
 
     }
     
+
     // ------------------------ Playlist ------------------------------------------------//
 
     // Deleting a song from the playlist
@@ -49,12 +49,15 @@ class PlaylistComponent extends React.Component{
 
     handleSave = (title, artists, genre) => {
 
-        PlaylistService.handleSave(title, artists, genre).then((response) => {
+        const artistStr = artists.join("-") // formatting to fit mapping url in spring boot controller glass
+
+        PlaylistService.handleSave(title, artistStr, genre).then((response) => {
             this.setState({songs: response.data})
         });
 
     }
 
+    // Getting the list of genres from songList
     getGenres = () => {
         const songList = this.state.songList;
         let genreList = [];
@@ -68,6 +71,7 @@ class PlaylistComponent extends React.Component{
         return genreList;
     }
 
+    // Getting list of artists from songList
     getArtists = () => {
         const songList = this.state.songList;
         let artistList = [];
@@ -85,19 +89,41 @@ class PlaylistComponent extends React.Component{
         }
         return artistList;
     }
+
     // ------------------------------- Search Bar -----------------------------------------------//
 
     onTextChange = (e) => {
         const value = e.target.value;
         let suggestions = [];
-
+        
         if(value.length > 0){
             let songList = this.state.songList;
 
             /*checking for matching substring in songList (by title) */
-            for (let i=0; i< songList.length; i++ ){
+            for (let i = 0; i < songList.length; i++ ){
 
-                if (songList[i].title.substr(0, value.length).toLowerCase() === value.toLowerCase()){
+                // Search by title
+                if (songList[i].title.substr(0, value.length).toLowerCase() === value.toLowerCase() 
+                    && !suggestions.includes(songList[i])){
+                    suggestions.push(songList[i]);
+                }
+
+                // Search by artist
+                let artistsForSong = songList[i].artists;
+                for(let j = 0; j < artistsForSong.length; j++){
+
+                    if (artistsForSong[j].substr(0, value.length).toLowerCase()=== value.toLowerCase()
+                        && !suggestions.includes(songList[i])){
+                        suggestions.push(songList[i]);
+                    }
+                }
+
+                // Seach by all info
+                let totalString = songList[i].title.concat(" - ").concat(songList[i].artists.join(", ")).concat(" (")
+                .concat(songList[i].genre).concat(")");
+
+                if (totalString.substr(0, value.length).toLowerCase() === value.toLowerCase()
+                    && !suggestions.includes(songList[i])){
                     suggestions.push(songList[i]);
                 }
 
@@ -107,7 +133,8 @@ class PlaylistComponent extends React.Component{
 
         this.setState(() => ({
             suggestions,
-            text: value
+            text: value,
+            message: ""
         }))
     }
 
@@ -115,8 +142,9 @@ class PlaylistComponent extends React.Component{
 
         this.handleSave(value.title, value.artists, value.genre);
         this.setState(() => ({
-            text: value.title, //.concat(" - ").concat(value.artists),
-            suggestions: []
+            text: value.title.concat(" - ").concat(value.artists.join(", ")).concat(" (").concat(value.genre).concat(")"),
+            suggestions: [],
+            message: ""
         }));
 
     }
@@ -131,7 +159,7 @@ class PlaylistComponent extends React.Component{
                 {
                     suggestions.map((song, index) => (
                         <li key={index} onClick={() => this.selectedText(song)}>
-                             {song.title} - {song.artists} ({song.genre})
+                             {song.title} - {song.artists.join(", ")} ({song.genre})
                         </li>))
                 }
             </ul>
@@ -140,17 +168,22 @@ class PlaylistComponent extends React.Component{
 
     filterByGenre = (genre) => {
         SongBankService.handleGenre(genre).then((response) => {
-            this.setState({suggestions: response.data})
+            this.setState(() => ({
+                suggestions: response.data,
+                message: ""
+            }))
         });
         this.renderSuggestions();
     }
     
     filterByArtist = (artist) => {
         SongBankService.handleArtist(artist).then((response) => {
-            this.setState({suggestions: response.data})
+            this.setState(() => ({
+                suggestions: response.data,
+                message: ""
+            }))
         });
         this.renderSuggestions();
-        console.log("Suggestions:".concat(this.state.suggestions));
     }
 
     render() {
@@ -164,7 +197,6 @@ class PlaylistComponent extends React.Component{
 
         return(
             <div>
-            {/* <h1 id="notebooks" className="text-center">Playlist</h1> */}
 
             <SearchBar
                     suggestions={this.state.suggestions}
@@ -178,7 +210,6 @@ class PlaylistComponent extends React.Component{
             />
 
             <h1 id="notebooks-alt" className="text-center">Playlist</h1>
-            <p style={errorStyle}>{this.state.message}</p>
             <table className = "table table-striped table-dark"> 
                 <thead>
                     <tr>
@@ -195,7 +226,9 @@ class PlaylistComponent extends React.Component{
                         song =>
                         <tr key={song.songId}>
                             <td>{song.title}</td>
-                            <td>{song.artists}</td>
+                            <td>{song.artists.join(", ")}</td>
+                            {console.log(song.artists)}
+                            {console.log(song.artists.join(", "))}
                             <td>{song.genre}</td>
                             <td>{song.dateAdded}</td>
                             <td>
@@ -215,9 +248,10 @@ class PlaylistComponent extends React.Component{
                             </td>
                         </tr>
                     )}
+                    
                 </tbody>
             </table>
-
+            <p style={errorStyle}>{this.state.message}</p>  
             </div>
         )
     }
