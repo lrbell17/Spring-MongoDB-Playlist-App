@@ -9,7 +9,7 @@ A Spring Boot/React application for accessing and manipulating song data in a pe
 **Front-End:**
 * **playlist-frontend:** React.js application that communicates with the backend services to display data and provide a UI
   - displays all songs in the playlist, with buttons to delete or play (not implemented)
-  - auto-completed search bar for adding new songs to the playlist by title
+  - auto-completed search bar for adding new songs to the playlist by title, artist or both
   - dropdown menu options to filter search suggestions by artist or genre
 
 **Dependencies:** cd to the "shopping-frontend" folder in cmd and run these commands
